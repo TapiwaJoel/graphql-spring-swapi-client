@@ -1,13 +1,36 @@
 import {NgModule} from '@angular/core';
-import {ApolloModule, APOLLO_OPTIONS} from 'apollo-angular';
+import {APOLLO_OPTIONS, ApolloModule, gql} from 'apollo-angular';
 import {ApolloClientOptions, InMemoryCache} from '@apollo/client/core';
 import {HttpLink} from 'apollo-angular/http';
 
-const uri = 'http://localhost:5000/swapi-graphql/api/'; // <-- add the URL of the GraphQL server here
+
+const uri = 'http://localhost:5000/swapi-graphql/api/';
+const typeDefs = gql`
+  type Query {
+    people(page : String) : Response
+    search(name : String) : Response
+  }
+
+  type Response {
+    count : String
+    next : String
+    previous : String
+    results: [People]
+  }
+
+  type People {
+    name : String
+    height : String
+    mass : String
+    gender : String
+    homeworld : String
+  }`
+
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
     link: httpLink.create({uri}),
     cache: new InMemoryCache(),
+    typeDefs
   };
 }
 
