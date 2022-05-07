@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Person} from "../person.type";
 import {PeopleService} from "../people.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-people-list',
@@ -14,7 +15,7 @@ export class PeopleListComponent implements OnInit {
   public errors: any;
 
 
-  constructor(private peopleService: PeopleService) {
+  constructor(private peopleService: PeopleService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,10 +32,7 @@ export class PeopleListComponent implements OnInit {
   }
 
   public setSelectedPerson(selectedPerson: any): void {
-    this.errors = null;
-    this.peopleService.searchPeopleByName(selectedPerson.name).valueChanges.subscribe((results: any) => {
-      this.selectedPerson = results.data.search.results[0];
-      this.errors = results.errors;
-    })
+    this.router.navigate(['/people', selectedPerson.name])
+
   }
 }
